@@ -73,17 +73,19 @@ function logJSONData($APIres, $pathToLogFile)
 
 if (isset($_SESSION[$id]) and $msgtype == false) {
 
-    $_SESSION[$id] = "{$_SESSION[$id]}{$user_data},"; //"scrn1Option" -> "scrn1Option,scrn2Option"
-
     //TODO: Validate the input
 
-    if (!preg_match("/^[1-3,]+$/", $_SESSION[$id])) {
+    if (!preg_match("/^[1-3]+$/", $user_data) || $user_data == '') {
         $msg = "Invalid Response buddy, redial the code and try again :)";
         $resp = array("USERID" => $ussd_id, "MSISDN" => $msisdn, "USERDATA" => $user_data, "MSG" => $msg, "MSGTYPE" => false);
         echo json_encode($resp);
         session_destroy();
         die();
     }
+
+    $_SESSION[$id] = "{$_SESSION[$id]}{$user_data},"; //"scrn1Option" -> "scrn1Option,scrn2Option"
+
+
     file_put_contents('./res.txt', "{$_SESSION[$id]}\n", FILE_APPEND);
 
 
